@@ -17,7 +17,8 @@ app = Flask(__name__)
 CORS(app)
 
 # Configure Google Gemini API
-GOOGLE_API_KEY = "AIzaSyAbBHbu3pQru4LY8sa-J7oPUBmrL7GBvko"  
+import os
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key=GOOGLE_API_KEY)
 embedding_function = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=GOOGLE_API_KEY)
 llm = GoogleGenerativeAI(model="gemini-pro", google_api_key=GOOGLE_API_KEY)
@@ -111,6 +112,10 @@ def ask():
     query = request.json.get('query')
     answer = generate_answer(query)
     return jsonify({"answer": answer})
+    
+@app.route("/")
+def home():
+    return jsonify({"message": "Flask App is Running!"})
 
 if __name__ == '__main__':
     app.run(debug=True)
